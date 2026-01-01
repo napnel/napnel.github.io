@@ -1,102 +1,118 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このリポジトリでの作業時にClaude Codeへ提供するガイダンス。
 
-## Project Overview
+## プロジェクト概要
 
-This is an Astro-based static blog site deployed to GitHub Pages at https://napnel.github.io. It's built using the Astro Blog template with support for Markdown/MDX content, RSS feeds, and sitemap generation.
+Astroで構築した個人の**研究・学習ノート**サイト。GitHub Pagesにデプロイ: https://napnel.github.io
 
-## Development Commands
+**目的**: 技術学習、研究ノート、ナレッジ管理のためのDigital Garden
+
+**対象読者**: 主に自分自身（セルフドキュメント、ナレッジベース）
+
+**更新頻度**: 週1回以上
+
+## 開発コマンド
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server (runs on localhost:4321)
-npm run dev
-
-# Build for production (output to ./dist/)
-npm run build
-
-# Preview production build locally
-npm run preview
-
-# Run Astro CLI commands
-npm run astro ...
+npm install      # 依存関係インストール
+npm run dev      # 開発サーバー起動 (localhost:4321)
+npm run build    # 本番ビルド (./dist/)
+npm run preview  # 本番ビルドのプレビュー
 ```
 
-## Architecture
+## アーキテクチャ
 
 ### Content Collections
 
-The blog uses Astro's Content Collections API (src/content.config.ts:4-19) for type-safe content management:
+AstroのContent Collections API (`src/content.config.ts`) で型安全にコンテンツ管理:
 
-- Blog posts live in `src/content/blog/` as Markdown or MDX files
-- Schema defined with Zod validation requiring: `title`, `description`, `pubDate`, and optional `updatedDate` and `heroImage`
-- Access posts via `getCollection('blog')` in pages
-- Content loader uses glob pattern: `**/*.{md,mdx}`
+- 記事は `src/content/blog/` にMarkdown/MDXで配置
+- Zodでスキーマ定義。必須: `title`, `description`, `pubDate`
+- オプション: `updatedDate`, `heroImage`, `tags`, `category`
+- `getCollection('blog')` でアクセス
 
-### Routing
+### ルーティング
 
-- File-based routing in `src/pages/`
-- Dynamic blog post routes handled by `src/pages/blog/[...slug].astro`
-- `getStaticPaths()` generates routes from content collection at build time
-- Each post route uses `render()` to transform content and passes to `BlogPost` layout
+- `src/pages/` でファイルベースルーティング
+- 記事ページ: `src/pages/blog/[...slug].astro`
+- `getStaticPaths()` でビルド時にルート生成
 
-### Site Configuration
+### サイト設定
 
-- Site URL configured in `astro.config.mjs:9` as `https://napnel.github.io`
-- Global constants (site title, description) in `src/consts.ts`
-- Integrations: MDX, Sitemap
-- TypeScript with strict null checks enabled
+- サイトURL: `astro.config.mjs` で `https://napnel.github.io`
+- 定数: `src/consts.ts`
+- 統合: MDX, Sitemap
 
-### Deployment
+### デプロイ
 
-GitHub Actions workflow (`.github/workflows/deploy.yml`) automatically:
-1. Builds on push to `develop` branch or manual trigger
-2. Uses Node.js 20
-3. Runs `npm ci` and `npm run build`
-4. Deploys `./dist/` to GitHub Pages
+GitHub Actions (`.github/workflows/deploy.yml`):
+1. `develop` ブランチへのpushまたは手動トリガーでビルド
+2. Node.js 20使用
+3. `npm ci && npm run build`
+4. `./dist/` をGitHub Pagesにデプロイ
 
-## Branch Strategy
+## ブランチ戦略
 
-- **develop**: Default branch. All development work happens here, auto-deploys on push
-- **feature/***: Feature branches. Merge into develop when ready
-- **main**: Not used (legacy)
+- **develop**: デフォルトブランチ。開発作業はここ、pushで自動デプロイ
+- **feature/***: 機能ブランチ。完了したらdevelopにマージ
+- **main**: 未使用（レガシー）
 
-## Project Structure
+## プロジェクト構成
 
 ```
 src/
-├── assets/          # Static assets processed by Astro
-├── components/      # Reusable Astro components (Header, Footer, etc.)
+├── assets/          # 静的アセット
+├── components/      # Astroコンポーネント
 ├── content/
-│   └── blog/        # Blog post Markdown/MDX files
-├── layouts/         # Page layouts (BlogPost.astro)
-├── pages/           # File-based routes
+│   └── blog/        # 記事 (Markdown/MDX)
+├── layouts/         # レイアウト
+├── pages/           # ルート
 │   ├── blog/
-│   │   ├── [...slug].astro  # Dynamic blog post pages
-│   │   └── index.astro      # Blog listing
+│   │   ├── [...slug].astro  # 記事ページ
+│   │   └── index.astro      # 記事一覧
 │   ├── about.astro
 │   ├── index.astro
-│   └── rss.xml.js           # RSS feed generation
-└── styles/          # Global styles
+│   └── rss.xml.js
+└── styles/          # スタイル
 ```
 
-## Adding New Blog Posts
+## 記事の追加
 
-Create a new `.md` or `.mdx` file in `src/content/blog/` with required frontmatter:
+`src/content/blog/` に `.md` または `.mdx` を作成:
 
 ```md
 ---
-title: "Post Title"
-description: "Post description"
+title: "タイトル"
+description: "説明"
 pubDate: 2026-01-01
-updatedDate: 2026-01-02  # optional
-heroImage: ./image.png    # optional, relative to src/assets/
+updatedDate: 2026-01-02    # オプション
+heroImage: ./image.png      # オプション
+tags: ["Astro", "WebDev"]   # オプション
+category: "Tutorial"        # オプション
 ---
 
-Content here...
+本文...
 ```
 
-The schema validation ensures type safety and will error if required fields are missing.
+## デザイン方針
+
+**Digital Garden** アプローチ:
+- コンテンツ重視、装飾は最小限
+- 読みやすさと整理を重視
+- 完成度より学習と知識の蓄積を優先
+
+## 文体
+
+温度感低めの独り言スタイル:
+
+**使う表現**
+- 「〜らしい」「〜っぽい」「〜かもしれない」（断定しすぎない）
+- 「〜だった」「〜した」（淡々と事実を述べる）
+- 「よさそう」「使えそう」（控えめな評価）
+- 短文、体言止め
+
+**避ける表現**
+- 「〜ですよね！」「〜しましょう！」（読者への語りかけ）
+- 「めちゃくちゃ便利」「最高」（テンション高い表現）
+- 感嘆符の多用
