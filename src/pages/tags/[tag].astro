@@ -1,0 +1,150 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE } from '../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+
+	// Collect all unique tags
+	const uniqueTags = new Set<string>();
+	posts.forEach((post) => {
+		const tags = post.data.tags || [];
+		tags.forEach((tag) => uniqueTags.add(tag.toLowerCase()));
+	});
+
+	// Generate a path for each tag
+	return Array.from(uniqueTags).map((tag) => {
+		const filteredPosts = posts.filter((post) =>
+			(post.data.tags || []).map(t => t.toLowerCase()).includes(tag)
+		);
+		return {
+			params: { tag },
+			props: {
+				posts: filteredPosts.sort(
+					(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+				),
+				tag: tag,
+			},
+		};
+	});
+}
+
+type Props = {
+	posts: CollectionEntry<'blog'>[];
+	tag: string;
+};
+
+const { posts, tag } = Astro.props;
+const capitalizedTag = tag.charAt(0).toUpperCase() + tag.slice(1);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`Posts tagged "${capitalizedTag}" | ${SITE_TITLE}`}
+			description={`All posts tagged with ${capitalizedTag}`}
+		/>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Posts tagged "{capitalizedTag}"</h1>
+			<p>{posts.length} post{posts.length !== 1 ? 's' : ''} found</p>
+
+			<section>
+				<ul>
+					{
+						posts.map((post) => (
+							<li>
+								<a href={`/blog/${post.id}/`}>
+									<h4 class="title">{post.data.title}</h4>
+									<p class="date">
+										<FormattedDate date={post.data.pubDate} />
+										{post.data.updatedDate && (
+											<span class="updated">
+												(Updated: <FormattedDate date={post.data.updatedDate} />)
+											</span>
+										)}
+									</p>
+									<p class="description">{post.data.description}</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+
+			<p>
+				<a href="/tags">← Back to all tags</a>
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		width: 960px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 3em 1em;
+	}
+	h1 {
+		font-size: 2.5em;
+		margin: 0.5em 0;
+	}
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
+		list-style-type: none;
+		margin: 2rem 0;
+		padding: 0;
+	}
+	ul li {
+		width: calc(50% - 1rem);
+	}
+	ul li a {
+		display: block;
+		text-decoration: none;
+		color: inherit;
+		padding: 1rem;
+		border: 1px solid #ddd;
+		border-radius: 0.5rem;
+		transition: box-shadow 0.2s;
+	}
+	ul li a:hover {
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+	.title {
+		margin: 0;
+		font-size: 1.25rem;
+		line-height: 1.3;
+	}
+	.date {
+		margin: 0.5rem 0;
+		color: #666;
+		font-size: 0.9rem;
+	}
+	.updated {
+		font-style: italic;
+		font-size: 0.85em;
+	}
+	.description {
+		margin: 0.5rem 0 0 0;
+		color: #444;
+	}
+	@media (max-width: 720px) {
+		ul {
+			gap: 0.5em;
+		}
+		ul li {
+			width: 100%;
+		}
+	}
+</style>

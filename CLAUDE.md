@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Astro-based static blog site deployed to GitHub Pages at https://napnel.github.io. It's built using the Astro Blog template with support for Markdown/MDX content, RSS feeds, and sitemap generation.
+This is a personal **research and learning notes** site built with Astro and deployed to GitHub Pages at https://napnel.github.io.
+
+**Purpose**: Digital garden for organizing technical learning, research notes, and knowledge management.
+
+**Target Audience**: Primarily myself (self-documentation and knowledge base).
+
+**Update Frequency**: Weekly or more frequent updates.
 
 ## Development Commands
 
@@ -29,12 +35,22 @@ npm run astro ...
 
 ### Content Collections
 
-The blog uses Astro's Content Collections API (src/content.config.ts:4-19) for type-safe content management:
+The blog uses Astro's Content Collections API (src/content.config.ts) for type-safe content management:
 
 - Blog posts live in `src/content/blog/` as Markdown or MDX files
-- Schema defined with Zod validation requiring: `title`, `description`, `pubDate`, and optional `updatedDate` and `heroImage`
+- Schema defined with Zod validation requiring: `title`, `description`, `pubDate`
+- Optional fields: `updatedDate`, `heroImage`, `tags` (array of strings), `category`
 - Access posts via `getCollection('blog')` in pages
 - Content loader uses glob pattern: `**/*.{md,mdx}`
+
+### Tags and Categories
+
+Tags are used to organize content by topic:
+
+- Tag index page: `src/pages/tags/index.astro` - Lists all tags with post counts
+- Tag-specific pages: `src/pages/tags/[tag].astro` - Shows posts for a specific tag
+- Tags are displayed on both blog listing and individual post pages
+- Tags are case-insensitive for URLs (converted to lowercase)
 
 ### Routing
 
@@ -77,6 +93,9 @@ src/
 │   ├── blog/
 │   │   ├── [...slug].astro  # Dynamic blog post pages
 │   │   └── index.astro      # Blog listing
+│   ├── tags/
+│   │   ├── [tag].astro      # Tag-specific post listing
+│   │   └── index.astro      # All tags listing
 │   ├── about.astro
 │   ├── index.astro
 │   └── rss.xml.js           # RSS feed generation
@@ -92,11 +111,21 @@ Create a new `.md` or `.mdx` file in `src/content/blog/` with required frontmatt
 title: "Post Title"
 description: "Post description"
 pubDate: 2026-01-01
-updatedDate: 2026-01-02  # optional
-heroImage: ./image.png    # optional, relative to src/assets/
+updatedDate: 2026-01-02    # optional
+heroImage: ./image.png      # optional, relative to src/assets/
+tags: ["Astro", "WebDev"]   # optional, array of tags
+category: "Tutorial"        # optional
 ---
 
 Content here...
 ```
 
 The schema validation ensures type safety and will error if required fields are missing.
+
+## Design Philosophy
+
+This site follows a **Digital Garden** approach:
+- Content-first, minimal decoration
+- Focus on readability and organization
+- Simple navigation through tags and categories
+- Emphasis on learning and knowledge building over polished presentation
