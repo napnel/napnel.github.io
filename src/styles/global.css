@@ -37,7 +37,7 @@ body {
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 	color: rgb(var(--gray-dark));
-	font-size: 18px;
+	font-size: 0.95rem;
 	line-height: 1.6;
 }
 main {
@@ -57,23 +57,23 @@ h6 {
 	line-height: 1.2;
 }
 h1 {
-	font-size: 2.5em;
+	font-size: 1.5rem;
 	font-weight: 700;
 }
 h2 {
-	font-size: 2em;
+	font-size: 1.2rem;
 	font-weight: 600;
 }
 h3 {
-	font-size: 1.5em;
+	font-size: 1.1rem;
 	font-weight: 600;
 }
 h4 {
-	font-size: 1.25em;
+	font-size: 1rem;
 	font-weight: 600;
 }
 h5 {
-	font-size: 1.1em;
+	font-size: 0.95rem;
 	font-weight: 600;
 }
 strong,

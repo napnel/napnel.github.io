@@ -1,24 +1,47 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
 ---
 
-<Layout
-	title="About"
-	description="About this site"
-	pubDate={new Date()}
->
-	<h2>About This Site</h2>
-	<p>
-		This is a personal digital garden for documenting my learning journey, research notes, and technical explorations.
-	</p>
-
-	<h2>Purpose</h2>
-	<p>
-		The goal is to create a knowledge base for myself—a place to organize thoughts, track progress, and build upon past learning.
-	</p>
-
-	<h2>Topics</h2>
-	<p>
-		Content will vary based on what I'm currently learning or researching. Browse by <a href="/tags">tags</a> to explore specific topics.
-	</p>
-</Layout>
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={`About | ${SITE_TITLE}`} description="このサイトについて" />
+		<style>
+			main {
+				width: 960px;
+				max-width: calc(100% - 2em);
+				margin: auto;
+				padding: 3em 1em;
+			}
+			.name {
+				margin: 0;
+				font-size: 1.1rem;
+				font-weight: 600;
+				color: rgb(var(--black));
+			}
+			p {
+				margin: 0.5rem 0 0 0;
+				font-size: 0.95rem;
+				color: rgb(var(--gray-dark));
+				line-height: 1.5;
+			}
+			a {
+				color: rgb(var(--accent));
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<p class="name">寝占 孝晃 / napnel（Yoshiaki Nejime）</p>
+			<p>会津大学大学院 コンピュータ・情報システム学専攻 修了（26期）</p>
+			<p>ソフトウェアエンジニア。個人開発中心。機械学習と仮想通貨とか。</p>
+			<p>このサイトは学習メモや調べたこと、雑感を置いておく場所。</p>
+			<p><a href="https://github.com/napnel">GitHub</a></p>
+		</main>
+		<Footer />
+	</body>
+</html>
