@@ -53,10 +53,16 @@ The blog uses Astro's Content Collections API (src/content.config.ts:4-19) for t
 ### Deployment
 
 GitHub Actions workflow (`.github/workflows/deploy.yml`) automatically:
-1. Builds on push to `main` branch or manual trigger
+1. Builds on push to `develop` branch or manual trigger
 2. Uses Node.js 20
 3. Runs `npm ci` and `npm run build`
 4. Deploys `./dist/` to GitHub Pages
+
+## Branch Strategy
+
+- **develop**: Default branch. All development work happens here, auto-deploys on push
+- **feature/***: Feature branches. Merge into develop when ready
+- **main**: Not used (legacy)
 
 ## Project Structure
 

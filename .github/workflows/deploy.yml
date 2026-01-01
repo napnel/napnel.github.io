@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
 on:
-  # main ブランチへのプッシュ時にトリガー
+  # develop ブランチへのプッシュ時にトリガー
   push:
-    branches: [ main ]
+    branches: [ develop ]
   # GitHub の Actions タブから手動実行を許可
   workflow_dispatch:
 
